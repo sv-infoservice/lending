@@ -425,6 +425,7 @@
             box-shadow: 0 30px 80px rgba(0,0,0,0.6);
             position: relative;
             overflow: hidden;
+            text-align: center; /* Выравниваем кнопку по центру */
         }
 
         /* Декорация на форме */
@@ -438,42 +439,10 @@
             opacity: 0.2;
         }
 
-        .form-group { margin-bottom: 25px; }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 500;
-            color: #ccc;
-            font-size: 0.9rem;
-            letter-spacing: 0.5px;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 18px;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid #333;
-            border-radius: 12px;
-            color: #fff;
-            font-family: inherit;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
-            background: rgba(0,0,0,0.5);
-            transform: scale(1.02);
-        }
-
         .form-submit {
-            width: 100%;
-            margin-top: 10px;
+            width: auto;
+            padding: 20px 60px;
+            font-size: 1.2rem;
         }
 
         /* Footer */
@@ -509,8 +478,8 @@
             box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
             animation: fadeInUp 0.5s ease;
         }
-        .modal h2 { color: var(--accent-gold); margin-bottom: 20px; font-size: 2rem; }
-        .modal p { color: #ccc; margin-bottom: 30px; }
+        .modal h2 { color: #fff; margin-bottom: 20px; font-size: 1.5rem; }
+        .modal p { color: #ccc; margin-bottom: 30px; line-height: 1.5; font-size: 0.95rem; }
         .close-modal {
             background: transparent;
             color: #fff;
@@ -520,6 +489,7 @@
             cursor: pointer;
             font-weight: 600;
             transition: 0.3s;
+            margin-top: 20px;
         }
         .close-modal:hover {
             background: #fff;
@@ -530,7 +500,8 @@
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.2rem; }
             .section-title { font-size: 2rem; }
-            .form-box { padding: 30px 20px; }
+            .form-box { padding: 40px 20px; }
+            .form-submit { width: 100%; padding: 18px 20px; }
             .meaning-text { font-size: 1rem; }
             .hero p { font-size: 1rem; }
             .step { padding-left: 60px; }
@@ -672,37 +643,14 @@
     </div>
 </section>
 
-<!-- 6. Форма захвата -->
+<!-- 6. Форма захвата (Изменена на кнопку) -->
 <section class="contact" id="form-section">
     <div class="container reveal">
         <h2 class="section-title">Подать заявку в фокус-группу</h2>
         <p class="section-subtitle">В группу попадут только 6 экспертов. Оставьте заявку, чтобы забронировать.</p>
 
         <div class="form-box">
-            <!-- ВАЖНО: Добавьте action в JS ниже, чтобы работала отправка -->
-            <form id="leadForm">
-                <div class="form-group">
-                    <label for="name">Ваше имя</label>
-                    <input type="text" id="name" name="name" placeholder="Иван Иванов" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="niche">Ниша / Направление</label>
-                    <input type="text" id="niche" name="niche" placeholder="Психология, Инвестиции, Фитнес..." required>
-                </div>
-
-                <div class="form-group">
-                    <label for="social">Ссылка на соцсети</label>
-                    <input type="text" id="social" name="social" placeholder="@username" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="request">Ваш главный запрос сегодня</label>
-                    <textarea id="request" name="message" rows="4" placeholder="Например: хочу систему, устал от рутины..."></textarea>
-                </div>
-
-                <button type="submit" id="submitBtn" class="btn form-submit">Забронировать место</button>
-            </form>
+            <button id="openApplyBtn" class="btn form-submit">Подать Заявку</button>
         </div>
     </div>
 </section>
@@ -713,14 +661,14 @@
     </div>
 </footer>
 
-<!-- Модальное окно "Успех" -->
-<div id="successModal" class="modal">
+<!-- Модальное окно "Согласие и переход" -->
+<div id="consentModal" class="modal">
     <div class="modal-content">
-        <i class="fa-solid fa-check-circle" style="font-size: 4rem; color: #FFD700; margin-bottom: 20px;"></i>
-        <h2>Заявка принята! 🚀</h2>
-        <p>Спасибо, что хотите стать частью Инфосервиса.</p>
-        <p>Я свяжусь с вами в ближайшее время по указаным контактам.</p>
-        <button class="close-modal" onclick="closeModal()">Отлично</button>
+        <h2>Подтверждение</h2>
+        <p>Нажимая кнопку "Продолжить" вы даёте согласие на обработку ваших персональных данных.</p>
+        <a href="https://forms.gle/JsVePJy8zETw4GNt6" target="_blank" class="btn" style="display: inline-block; padding: 15px 40px; font-size: 1rem;" onclick="closeModal()">Продолжить</a>
+        <br>
+        <button class="close-modal" onclick="closeModal()">Закрыть</button>
     </div>
 </div>
 
@@ -741,58 +689,22 @@
     // Запуск при загрузке
     reveal();
 
+    // --- 2. Логика модального окна заявки ---
+    var consentModal = document.getElementById("consentModal");
+    var openBtn = document.getElementById("openApplyBtn");
 
-    // --- 2. Логика формы (Связь с Formspree) ---
-    var form = document.getElementById("leadForm");
-
-    async function handleSubmit(event) {
-        event.preventDefault();
-        var status = document.getElementById("successModal");
-        var btn = document.getElementById("submitBtn");
-        var data = new FormData(event.target);
-
-        // Анимация загрузки на кнопке
-        var originalBtnText = btn.innerText;
-        btn.innerText = "Отправка...";
-        btn.style.opacity = "0.7";
-
-        // ID формы от Formspree
-        var formspreeUrl = "https://formspree.io/f/mrepbldr";
-
-        // Реальная отправка
-        fetch(formspreeUrl, {
-            method: form.method,
-            body: data,
-            headers: {
-                'Accept': 'application/json'
-            }
-        }).then(response => {
-            if (response.ok) {
-                status.style.display = "flex";
-                form.reset();
-            } else {
-                alert("Ой! Проблема с отправкой формы. Попробуйте написать мне в Direct.");
-            }
-            btn.innerText = originalBtnText;
-            btn.style.opacity = "1";
-        }).catch(error => {
-            alert("Ошибка сети. Проверьте интернет.");
-            btn.innerText = originalBtnText;
-            btn.style.opacity = "1";
-        });
+    openBtn.onclick = function() {
+        consentModal.style.display = "flex";
     }
 
-    form.addEventListener("submit", handleSubmit);
-
     function closeModal() {
-        document.getElementById('successModal').style.display = "none";
+        consentModal.style.display = "none";
     }
 
     // Закрытие модального окна по клику вне
     window.onclick = function(event) {
-        const modal = document.getElementById('successModal');
-        if (event.target == modal) {
-            modal.style.display = "none";
+        if (event.target == consentModal) {
+            consentModal.style.display = "none";
         }
     }
 </script>
